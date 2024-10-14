@@ -1,0 +1,147 @@
+openapi: "3.0.1"
+info:
+  version: "1.0.0"
+  title: "Trafilea Technical Test"
+  description: "This app handles records for numbers and stores their respective categories"
+
+servers:
+  - url: http://localhost:3000/api
+
+tags:
+  - name: "Records"
+    description: "Everything about general records actions"
+paths:
+  /record:
+    get:
+      tags:
+        - "Records"
+      summary: "Get all records"
+      description: "Retrieves all records with their value and category"
+      responses:
+        "200":
+          description: "The records was retrieved successfully."
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: "object"
+                    properties:
+                      message:
+                        type: "string"
+                      result:
+                        type: "array"
+                        items:
+                          type: "object"
+                          properties:
+                            value:
+                              type: "number"
+                            category:
+                              type: "string"
+                
+        "500":
+          description: "Internal server error"
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: "object"
+                    properties:
+                      error:
+                        type: "string"
+    post:
+      tags:
+        - "Records"
+      summary: "Create new record"
+      description: "Send a number to evaluate its category and store it"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - type: "object"
+                  properties:
+                    number:
+                      type: "number"
+      responses:
+        "201":
+          description: "Content created"
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: "object"
+                    properties:
+                      message:
+                        type: "string"
+        "400":
+          description: "Invalid number"
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: "object"
+                    properties:
+                      error:
+                        type: "string"
+        "500":
+          description: "Internal error"
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: "object"
+                    properties:
+                      error:
+                        type: "string"
+          
+  /record/{number}:
+    get:
+      tags:
+        - "Records"
+      summary: "Get a specific record"
+      description: "Retrieves a specific record with their value and category"
+      parameters:
+        - name: "number"
+          in: "path"
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: "Record successfully retrieved"
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: "object"
+                    properties:
+                      message:
+                        type: "string"
+                      result:
+                        type: "object"
+                        properties:
+                          value:
+                            type: "number"
+                          category:
+                            type: "string"
+        "404":
+          description: "Record not found"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  error:
+                    type: "string"
+        "500":
+          description: "Internal error"
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: "object"
+                    properties:
+                      error:
+                        type: "string"
+        
